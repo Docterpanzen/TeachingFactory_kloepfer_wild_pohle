@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="State_Motorsteuerung" Id="{ac2fc502-7cba-4324-8b36-49498c075611}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE State_Motorsteuerung :
+(
+	Off,
+	Reset,
+	Power,
+	Ready,
+	Moving
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

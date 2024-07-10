@@ -33,8 +33,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[timer_schleusse_1(PT := T#1S); // Timer mit 1s
-timer_schleusse_2(PT := T#5S); // Timer mit 2s
+      <ST><![CDATA[timer_schleusse_1(PT := T#2S); // Timer mit 2s
+timer_schleusse_2(PT := T#5S); // Timer mit 5s
 
 CASE eState_vereinzelung OF
 	State_Vereinzelung.Off:

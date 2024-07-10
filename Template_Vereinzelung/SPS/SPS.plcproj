@@ -21,6 +21,15 @@
     <Compile Include="DUTs\State.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\State_Dispenser.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\State_Foerderband.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\State_Motorsteuerung.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\State_Vereinzelung.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +40,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_Blink.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_Conveyor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_Dispenser.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_Foerderband.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_StatusLight.TcPOU">

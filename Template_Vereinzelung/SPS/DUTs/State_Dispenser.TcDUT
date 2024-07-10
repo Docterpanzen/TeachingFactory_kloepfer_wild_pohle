@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="State_Dispenser" Id="{2e85bf90-75b0-49bf-acdd-cd88a9e3c418}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE State_Dispenser :
+(
+	Off,
+	Reset, 
+	Reset_done,
+	Power, 
+	Ready, 
+	Dispensing,
+	Done,
+	Wait
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

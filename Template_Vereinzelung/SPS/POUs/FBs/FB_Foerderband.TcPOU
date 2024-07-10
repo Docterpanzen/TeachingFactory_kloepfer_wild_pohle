@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Foerderband" Id="{3dfae21a-4b4b-4be7-b878-acd92ae4aef4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Foerderband
+VAR_INPUT
+	
+	bEnable : BOOL; //enables FB
+	bExecute : BOOL; // transport the flask one position further
+	
+	bSensor1 : BOOL;
+	bSensor2 : BOOL;
+	bSensor3 : BOOL;
+	bSensor4 : BOOL;
+	
+END_VAR
+VAR_OUTPUT
+	
+	eStatus : State := State.Off;
+	
+	bStopper1: BOOL;
+	bStopper2: BOOL;
+	bStopper3: BOOL;
+	
+END_VAR
+VAR_IN_OUT
+	
+	ax : AXIS_REF;
+	
+END_VAR
+VAR
+	
+	//Conveyer FB
+	fbConveyor : FB_Conveyor;
+	
+	//internal state
+	eState_foerderband : State_Foerderband := State_Foerderband.Off;
+	
+	//counter of current position
+	nCurrentPosition_1 : INT := 0;
+	nCurrentPosition_2 : INT := 0;
+	
+	//timer
+	timer:TON;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbConveyor(
+	ax := ax);
+	
+CASE eState_foerderband OF
+	State_Foerderband.Off:
+		eStatus := State.Off;
+		
+		bStopper1 := FALSE;
+		bStopper2 := FALSE;
+		bStopper3 := FALSE;
+		
+		fbConveyor.bEnable := FALSE;
+	
+		IF bEnable THEN
+		fbConveyor.bEnable := TRUE;
+		eState_foerderband := State_Foerderband.Power_up;
+		END_IF
+	
+	State_Foerderband.Power_up:
+		IF fbConveyor.eStatus = State.Ready THEN
+			eState_foerderband := State_Foerderband.Ready;
+		END_IF
+		
+	State_Foerderband.Ready:
+		bStopper1 := FALSE;
+		bStopper2 := FALSE;
+		bStopper3 := FALSE;
+		eStatus := State.Ready;
+		IF bExecute THEN
+			eState_foerderband := State_Foerderband.Move_to_next;
+		END_IF
+		
+	State_Foerderband.Move_to_next:
+		eStatus := State.Production;
+		fbConveyor.bExecute := TRUE;
+		fbConveyor.bStop := FALSE;
+		CASE nCurrentPosition_1 OF
+			0: IF bSensor1 THEN
+				nCurrentPosition_2 :=0;
+				eState_foerderband := State_Foerderband.Wait;
+				END_IF
+			1: bStopper1 := TRUE;
+			   IF bSensor2 THEN
+				   nCurrentPosition_2 :=1;
+					eState_foerderband := State_Foerderband.Wait;
+				END_IF
+			2: bStopper1 := FALSE;
+				bStopper2 := TRUE;
+				IF bSensor3 THEN
+					nCurrentPosition_2 :=2;
+					eState_foerderband := State_Foerderband.Wait;
+				END_IF
+			3: bStopper2 := FALSE;
+				bStopper3 := TRUE;
+				IF bSensor4 THEN
+					nCurrentPosition_2 :=3;
+					eState_foerderband := State_Foerderband.Wait;
+				END_IF
+		END_CASE
+		
+	State_Foerderband.Wait:
+		timer(IN:=TRUE, PT:=T#1S);
+		IF timer.Q THEN
+			timer(IN:=FALSE);
+			eState_foerderband := State_Foerderband.Done;
+		END_IF
+		
+	State_Foerderband.Done:
+		eStatus := State.Done;
+		CASE nCurrentPosition_2 OF
+			0: 
+				fbConveyor.bExecute := FALSE;
+				fbConveyor.bStop := TRUE;
+				nCurrentPosition_1 :=1;
+			1: 
+				fbConveyor.bExecute := FALSE;
+				fbConveyor.bStop := TRUE;
+				nCurrentPosition_1 :=2;
+			2: 
+				fbConveyor.bExecute := FALSE;
+				fbConveyor.bStop := TRUE;
+				nCurrentPosition_1 :=3;
+					
+			3: 
+				fbConveyor.bExecute := FALSE;
+				fbConveyor.bStop := TRUE;
+				nCurrentPosition_1 :=0;
+		END_CASE
+		
+		eState_foerderband := State_Foerderband.wait_for_next;
+		
+		
+	State_Foerderband.wait_for_next:
+		IF bExecute THEN // warten solange von aussen bexecute geschaltet wird. wird getan sobald disp1,2,3 fertig ist	
+			eState_foerderband := State_Foerderband.Move_to_next;
+		END_IF
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Foerderband">
+      <LineId Id="9" Count="0" />
+      <LineId Id="47" Count="3" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="3" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="90" Count="5" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="100" Count="3" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="108" Count="21" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="157" Count="3" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="161" Count="1" />
+      <LineId Id="164" Count="3" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="168" Count="2" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="171" Count="2" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="174" Count="3" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="180" Count="1" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="57" Count="23" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

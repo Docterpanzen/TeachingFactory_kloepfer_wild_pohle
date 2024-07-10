@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Conveyor" Id="{8a2ff04b-0d33-4183-aa54-7805a2dac365}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Conveyor
+VAR_INPUT
+    bEnable  : BOOL;
+    bExecute : BOOL;
+	bStop : BOOL;
+END_VAR
+
+VAR_IN_OUT
+    ax : AXIS_REF;  // Achsen Referenz
+END_VAR
+
+VAR_OUTPUT
+    eStatus : State;
+END_VAR
+
+VAR
+    fbPower : MC_Power;
+    fbMoveVelocity : MC_MoveVelocity;
+    fbHalt : MC_Halt;
+    bAxPower : BOOL;
+    bAxMove : BOOL;
+    bHalt : BOOL;
+
+    eState_conveyor : INT := 0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Achse updaten
+ax.ReadStatus();
+
+// Achsenfreigabe (Power) aufrufen
+fbPower(Axis := ax, Enable := bAxPower, Enable_Positive := TRUE, Enable_Negative := TRUE);
+
+// Bewegungsbefehl aufrufen
+fbMoveVelocity(Axis := ax, Execute := bAxMove, Velocity := 30, Direction := Mc_Positive_Direction);
+
+// Haltbefehl aufrufen
+fbHalt(Axis := ax, Execute := bHalt);
+
+IF NOT bEnable THEN
+    eState_conveyor := 0;
+    eStatus := State.Off;
+    bAxPower := FALSE;
+    bAxMove := FALSE;
+    bHalt := TRUE;
+ELSE
+    CASE eState_conveyor OF
+        0: // Off
+            eStatus := State.Off;
+            bAxPower := FALSE;
+            bAxMove := FALSE;
+            bHalt := TRUE;
+            IF bEnable THEN
+                eState_conveyor := 1;
+            END_IF
+
+        1: // Powering up
+            eStatus := State.Init;
+            bAxPower := TRUE;
+            IF fbPower.Status THEN
+                eState_conveyor := 2;
+            END_IF
+
+        2: // Ready
+            eStatus := State.Ready;
+			bHalt := TRUE;
+            bAxMove := FALSE;
+            IF bExecute THEN
+				bHalt := false;
+                eState_conveyor := 3;
+            END_IF
+
+        3: // Production
+            eStatus := State.Production;
+            bAxMove := TRUE;
+            IF bStop THEN   
+				bHalt := TRUE;
+				bAxMove := FALSE;             
+				eState_conveyor := 2;
+			END_IF
+    END_CASE
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Conveyor">
+      <LineId Id="121" Count="37" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="162" Count="5" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
