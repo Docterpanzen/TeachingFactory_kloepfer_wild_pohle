@@ -1,12 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MAIN" Id="{41a6afe7-d655-4a0c-8495-2b17c7f15b36}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM MAIN
+    <Declaration><![CDATA[PROGRAM Main
 VAR
-	// Deklaration Vereinzelung...
+	
+	eState			: State;
+	nState_main		: INT := 0;
+	
+	Stopsignal		: BOOL;
+	
+
+	fbStatusLight: FB_StatusLight;
+	fbVereinzelung : FB_Vereinzelung;
 	
 	
 	mcPower : MC_Power;
+	
+	timer : TON;
+	
+	bEnable : BOOL;
+	bExecute : BOOL;
+	
+	bSensor_3: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -27,7 +42,84 @@ END_VAR
 	Active=> , 
 	Error=> , 
 	ErrorID=> );
-	]]></ST>
+	
+	
+	fbStatusLight(eStatus:= fbVereinzelung.eStatus , bRed=> IFC_HW.bAmpelRot, bYellow=> IFC_HW.bAmpelGelb, bGreen=> IFC_HW.bAmpelGrun );
+
+fbVereinzelung(
+bSensor_1 := IFC_HW.bEinzelSens1, 
+bSensor_2 := IFC_HW.bEinzelSens2,
+bSensor_3 := IFC_HW.bBandSens1,
+bAkt1_1 => IFC_HW.bR2AKT1,
+bAkt1_2 => IFC_HW.bR1AKT1,
+bAkt2_1 => IFC_HW.bR2AKT2,
+bAkt2_2 => IFC_HW.bR1AKT2);
+
+
+bEnable := IFC_HW.bEnable;
+bExecute := IFC_HW.bExecute;
+
+
+
+
+IF NOT bEnable THEN
+	nState_main := 0;
+END_IF
+
+CASE nState_main OF
+	
+	0: 		// off
+		fbVereinzelung.bEnable := FALSE;
+		
+		
+		IF bEnable THEN 
+			nState_main := 1;
+		END_IF
+	
+	1: 		// enable
+		fbVereinzelung.bEnable := TRUE;
+		
+		IF NOT bEnable THEN
+			nState_main := 0;
+		END_IF
+		
+		IF fbVereinzelung.eStatus = State.Ready AND bEnable THEN
+			nState_main := 2;
+		END_IF
+		
+	
+	2:		// vereinzeln
+		IF bExecute AND NOT bSensor_3 THEN
+			fbVereinzelung.bExecute := TRUE;
+			
+			IF NOT bEnable THEN
+			nState_main := 0;
+			END_IF
+			
+			IF fbVereinzelung.eStatus = State.Production AND bEnable THEN
+				fbVereinzelung.bExecute := FALSE;
+				nState_main := 3;
+			END_IF
+		END_IF
+		
+	3:		// warte
+		timer(in := TRUE, pt := T#5S);
+		
+		IF NOT bEnable THEN
+			nState_main := 0;
+		END_IF
+		
+		IF timer.Q AND bEnable THEN
+			timer.IN := FALSE;
+			nState_main := 1;
+		END_IF
+		
+		
+		
+		
+
+END_CASE
+]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="18" Count="0" />
@@ -37,6 +129,25 @@ END_VAR
       <LineId Id="25" Count="11" />
       <LineId Id="22" Count="0" />
       <LineId Id="20" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="70" Count="4" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="75" Count="7" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="83" Count="19" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="103" Count="8" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="112" Count="8" />
+      <LineId Id="145" Count="1" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="121" Count="10" />
+      <LineId Id="45" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

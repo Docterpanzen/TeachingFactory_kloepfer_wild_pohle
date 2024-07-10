@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_StatusLight" Id="{6b4e7d49-e54d-41ef-b47a-48efca46cabf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StatusLight
+VAR_INPUT
+
+	eStatus : State;	
+
+END_VAR
+VAR_OUTPUT
+	
+	bGreen : BOOL;
+	bYellow : BOOL;
+	bRed : BOOL;
+	
+END_VAR
+VAR
+	
+	fbBlink : FB_Blink;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbBlink(bStart := TRUE);
+
+CASE eStatus OF
+	State.Done :
+	bRed := FALSE;
+	bGreen := TRUE;
+	bYellow := TRUE;
+	
+	State.Error:
+	bRed := fbBlink.bBlink;
+	bGreen := FALSE;
+	bYellow := FALSE;
+	
+	State.Init:
+	bGreen := fbBlink.bBlink;
+	bRed := FALSE;
+	bYellow := FALSE;
+	
+	State.Off :
+	bGreen := FALSE;
+	bRed := TRUE;
+	bYellow := FALSE;
+	
+	State.Stop :
+	bGreen := FALSE;
+	bRed := fbBlink.bBlink;
+	bYellow := fbBlink.bBlink;
+	
+	State.Production :
+	bGreen := TRUE;
+	bRed := FALSE;
+	bYellow := FALSE;
+	
+	
+	State.Ready :
+	bGreen := fbBlink.bBlink;
+	bRed := FALSE;
+	bYellow := TRUE;
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_StatusLight">
+      <LineId Id="28" Count="37" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

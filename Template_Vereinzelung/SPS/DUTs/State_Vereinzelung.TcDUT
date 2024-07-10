@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="State_Vereinzelung" Id="{30bc5d47-45ca-449f-8883-a2289c180bb0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE State_Vereinzelung :
+(
+	Off,
+	Check,
+	Init,
+	Init_wait,
+	Bereit,	
+	Auswerfen,
+	Auswerfen_wait,
+	Fertig
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

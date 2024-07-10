@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Vereinzelung" Id="{e37ccecb-f0d0-4c19-8fd7-2ac16ac6b5ab}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Vereinzelung
+VAR_INPUT
+	
+	bEnable : BOOL;
+	bExecute : BOOL;
+	bSensor_1 : BOOL;
+	bSensor_2 : BOOL;
+	bSensor_3 : bool;
+	
+END_VAR
+
+VAR_OUTPUT
+	
+	bAkt1_1 : BOOL;		// Akteur oben schließen
+	bAkt1_2 : BOOL;		// Akteur oben öffnen
+	
+	bAkt2_1 : BOOL;		// Akteur unten schließen
+	bAkt2_2 : BOOL;		// Akteur unten öffnen
+	
+	eStatus : State := State.Off;	// State-Machine Anzeige
+	
+END_VAR
+
+VAR
+	
+	timer_schleusse_1 : TON;
+	timer_schleusse_2 : TON;
+	eState_vereinzelung : State_Vereinzelung := State_Vereinzelung.Off;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[timer_schleusse_1(PT := T#1S); // Timer mit 1s
+timer_schleusse_2(PT := T#5S); // Timer mit 2s
+
+CASE eState_vereinzelung OF
+	State_Vereinzelung.Off:
+	
+	eStatus := State.Off;
+	
+	// beide schleußen zu
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	IF bEnable THEN
+		eState_vereinzelung := State_Vereinzelung.Check;
+		
+	END_IF
+	
+	// überprüfe status von Vereinzelung
+	State_Vereinzelung.Check:
+	
+	eStatus := State.Off;	// immer noch aus
+	
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	IF bSensor_2 THEN
+		eState_vereinzelung := State_Vereinzelung.Init;
+	END_IF
+	
+	// Initialisieren State, öffne obere Schleuße
+	State_Vereinzelung.Init:
+	
+	eStatus := State.Init;
+	
+	// öffne obere schleuße
+	bAkt1_1 :=	FALSE;
+	bAkt1_2 :=	TRUE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	IF bSensor_1 THEN
+		eState_vereinzelung := State_Vereinzelung.Init_wait;
+	END_IF
+	
+	// warte bis die obere schleuße zu ist (timer)
+	State_Vereinzelung.Init_wait:
+	
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	timer_schleusse_1.IN := TRUE;
+	
+	IF timer_schleusse_1.Q THEN
+		timer_schleusse_1.IN := FALSE;
+		eState_vereinzelung := State_Vereinzelung.Bereit;
+	END_IF
+	
+	// Bereit zum flasche auszuwerfen
+	State_Vereinzelung.Bereit:
+	
+	eStatus := State.Ready;
+	
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	IF bExecute and not bSensor_3 THEN
+		eState_vereinzelung := State_Vereinzelung.Auswerfen;
+	END_IF
+	
+	// Flasche auswerfen
+	State_Vereinzelung.Auswerfen:
+	
+	eStatus := State.Production;
+	
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	FALSE;
+	bAkt2_2 :=	TRUE;
+	
+	IF NOT bSensor_1 THEN
+		eState_vereinzelung := State_Vereinzelung.Auswerfen_wait;
+	END_IF
+	
+	// warten nach auswerfen dass Flasche wirklich weg ist
+	State_Vereinzelung.Auswerfen_wait:
+	
+	timer_schleusse_2.IN := TRUE;
+	
+	IF timer_schleusse_2.Q THEN
+		timer_schleusse_2.IN := FALSE;
+		eState_vereinzelung := State_Vereinzelung.Fertig;
+	END_IF
+	
+	// Flasche ist weg, Schleuße wieder schließen
+	State_Vereinzelung.Fertig:
+	
+	eStatus := State.Done;
+	
+	// schleuße 2 wieder zu fahren
+	bAkt1_1 :=	TRUE;
+	bAkt1_2 :=	FALSE;
+	bAkt2_1 :=	TRUE;
+	bAkt2_2 :=	FALSE;
+	
+	timer_schleusse_1.IN := TRUE;
+	
+	IF timer_schleusse_1.Q AND NOT bExecute THEN
+		timer_schleusse_1.IN := FALSE;
+		eState_vereinzelung := State_Vereinzelung.Check;
+	END_IF
+	
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Vereinzelung">
+      <LineId Id="39" Count="118" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
