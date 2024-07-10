@@ -86,7 +86,7 @@ CASE nState_main OF
 		fbDispenser3.bEnable := TRUE;
 
         IF fbVereinzelung.eStatus = State.Ready AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
-            nState_main := 2;
+            nState_main := nState_main + 1;
         END_IF
 
     2:  // Vereinzeln
@@ -94,7 +94,7 @@ CASE nState_main OF
             fbVereinzelung.bExecute := TRUE;
             IF fbVereinzelung.eStatus = State.Production THEN
                 fbVereinzelung.bExecute := FALSE;
-                nState_main := 3;
+				nState_main := nState_main + 1;
             END_IF
         END_IF
 
@@ -102,49 +102,58 @@ CASE nState_main OF
 		fbFoerderband.bExecute := TRUE;		
 		IF fbFoerderband.eStatus = State.Done THEN
 			fbFoerderband.bExecute := FALSE;
-			nState_main := 4;
+			timer(in := TRUE, pt := T#2S);
+			IF timer.q THEN
+				timer.IN := FALSE;
+				nState_main := nState_main + 1;
+			END_IF 
 		END_IF
 		
 	4: // Starte Dispenser 1
 		fbDispenser1.bExecute := TRUE;
 		IF fbDispenser1.bDone THEN
 			fbDispenser1.bExecute := FALSE;
-			nState_main := 5;
+			nState_main := nState_main + 1;
 		END_IF
 		
 	5: 	// fahre zu pos. 2
 		fbFoerderband.bExecute := TRUE;
 		IF fbFoerderband.eStatus = State.Done THEN
 			fbFoerderband.bExecute := FALSE;
-			nState_main := 6;
+			timer(in := TRUE, pt := T#2S);
+			IF timer.q THEN
+				timer.IN := FALSE;
+				nState_main := nState_main + 1;
+			END_IF 
 		END_IF
 		
 	6:	// Starte Dispenser 2
+		fbFoerderband.bExecute := FALSE;
 		fbDispenser2.bExecute := TRUE;
 		IF fbDispenser2.eStatus = State.Done THEN
 			fbDispenser2.bExecute := FALSE;
-			nState_main := 7;
+			nState_main := nState_main + 1;
 		END_IF
 		
 	7: 	// fahre zu pos. 3
 		fbFoerderband.bExecute := TRUE;
 		IF fbFoerderband.eStatus = State.Done THEN
 			fbFoerderband.bExecute := FALSE;
-			nState_main := 8;
+			nState_main := nState_main + 1;
 		END_IF
 		
 	8:	// Starte Dispenser 3
 		fbDispenser3.bExecute := TRUE;
 		IF fbDispenser3.eStatus = State.Done THEN
 			fbDispenser3.bExecute := FALSE;
-			nState_main := 9;
+			nState_main := nState_main + 1;
 		END_IF
 	
 	9:	// fahre zu pos.4 
 		fbFoerderband.bExecute := TRUE;
 		IF fbFoerderband.eStatus = State.Done THEN
 			fbFoerderband.bExecute := FALSE;
-			nState_main := 10;
+			nState_main := nState_main + 1;
 		END_IF
 	
 		
@@ -194,11 +203,13 @@ END_CASE
       <LineId Id="720" Count="7" />
       <LineId Id="784" Count="0" />
       <LineId Id="944" Count="1" />
-      <LineId Id="728" Count="13" />
+      <LineId Id="728" Count="9" />
+      <LineId Id="981" Count="0" />
+      <LineId Id="739" Count="2" />
       <LineId Id="788" Count="0" />
-      <LineId Id="872" Count="1" />
-      <LineId Id="943" Count="0" />
-      <LineId Id="876" Count="0" />
+      <LineId Id="973" Count="2" />
+      <LineId Id="988" Count="3" />
+      <LineId Id="976" Count="0" />
       <LineId Id="875" Count="0" />
       <LineId Id="877" Count="1" />
       <LineId Id="789" Count="0" />
@@ -206,10 +217,15 @@ END_CASE
       <LineId Id="883" Count="0" />
       <LineId Id="882" Count="0" />
       <LineId Id="884" Count="4" />
+      <LineId Id="984" Count="1" />
+      <LineId Id="987" Count="0" />
       <LineId Id="890" Count="0" />
+      <LineId Id="986" Count="0" />
       <LineId Id="889" Count="0" />
       <LineId Id="892" Count="0" />
-      <LineId Id="910" Count="3" />
+      <LineId Id="910" Count="0" />
+      <LineId Id="983" Count="0" />
+      <LineId Id="911" Count="2" />
       <LineId Id="915" Count="0" />
       <LineId Id="914" Count="0" />
       <LineId Id="916" Count="4" />

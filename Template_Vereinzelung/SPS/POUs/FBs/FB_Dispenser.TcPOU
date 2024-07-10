@@ -31,7 +31,7 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Berechne die Bewegungsdistanz
-nDistance := (nDispenceGram * 5);
+nDistance := (nDispenceGram * 50);
 
 // Achse updaten
 ax.ReadStatus();
