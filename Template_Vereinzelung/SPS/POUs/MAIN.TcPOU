@@ -7,14 +7,19 @@ VAR
     fbStatusLight : FB_StatusLight;
     fbVereinzelung : FB_Vereinzelung;
     fbFoerderband : FB_Foerderband;
-	fbDispenser1 : FB_Dispenser;
-	fbDispenser2 : FB_Dispenser;
-	fbDispenser3 : FB_Dispenser;
+	fbDispenser1 : FB_Dispenser_1;
+	fbDispenser2 : FB_Dispenser_2;
+	fbDispenser3 : FB_Dispenser_3;
 
     bEnable : BOOL := FALSE;
     bExecute : BOOL := FALSE;
     nState_main : INT := 0;
     timer : TON;
+	timer2 : TON;
+	timer3 : TON;
+	timer4 : TON;
+	timer5 : TON;
+	timer6 : TON;
 	
 	
 END_VAR]]></Declaration>
@@ -116,52 +121,75 @@ CASE nState_main OF
 			nState_main := nState_main + 1;
 		END_IF
 		
-	5: 	// fahre zu pos. 2
+	5:	// warte
+		timer2(in := TRUE, pt := T#2S);
+		IF timer2.Q THEN
+			timer2.IN := FALSE;
+			nState_main := nState_main + 1;
+		END_IF
+	
+	6: 	// fahre zu pos. 2
 		fbFoerderband.bExecute := TRUE;
-		IF fbFoerderband.eStatus = State.Done THEN
+		timer3(in := TRUE, pt := T#2S);
+		IF timer3.Q THEN
+			timer3.IN := FALSE;
 			fbFoerderband.bExecute := FALSE;
-			timer(in := TRUE, pt := T#2S);
-			IF timer.q THEN
-				timer.IN := FALSE;
-				nState_main := nState_main + 1;
-			END_IF 
+			nState_main := nState_main + 1;
 		END_IF
 		
-	6:	// Starte Dispenser 2
-		fbFoerderband.bExecute := FALSE;
+		
+	7: // warte
+		IF fbFoerderband.eStatus = State.Done THEN
+			timer(in := TRUE, pt := T#4S);
+			IF timer.Q THEN
+				nState_main := nState_main + 1;
+			END_IF
+		END_IF
+		
+	8:	// starte dispenser 2
 		fbDispenser2.bExecute := TRUE;
 		IF fbDispenser2.eStatus = State.Done THEN
 			fbDispenser2.bExecute := FALSE;
 			nState_main := nState_main + 1;
 		END_IF
 		
-	7: 	// fahre zu pos. 3
-		fbFoerderband.bExecute := TRUE;
-		IF fbFoerderband.eStatus = State.Done THEN
-			fbFoerderband.bExecute := FALSE;
+	9:	// warte
+		timer(in := TRUE, pt := T#2S);
+		IF timer.Q THEN
+			timer.IN := FALSE;
 			nState_main := nState_main + 1;
 		END_IF
 		
-	8:	// Starte Dispenser 3
+	10:	// fahre zu pos 3
+		fbFoerderband.bExecute := TRUE;
+		timer5(in := TRUE, pt := T#2S);
+		IF timer5.Q THEN
+			timer5.IN := FALSE;
+			fbFoerderband.bExecute := FALSE;
+			nState_main := nState_main + 1;
+		END_IF
+	
+	11: //komme an pos 3 an
+		IF fbFoerderband.eStatus = State.Done THEN
+			nState_main := nState_main + 1;
+		END_IF
+		
+	12: // starte dispenser 3
 		fbDispenser3.bExecute := TRUE;
 		IF fbDispenser3.eStatus = State.Done THEN
 			fbDispenser3.bExecute := FALSE;
 			nState_main := nState_main + 1;
 		END_IF
-	
-	9:	// fahre zu pos.4 
+		
+	13:	// warte
 		fbFoerderband.bExecute := TRUE;
-		IF fbFoerderband.eStatus = State.Done THEN
+		timer6(in := TRUE, pt := T#2S);
+		IF timer6.Q THEN
 			fbFoerderband.bExecute := FALSE;
 			nState_main := nState_main + 1;
 		END_IF
-	
 		
-		
-		
-		
-		
-		
+	14: // komme an pos 4 an
 		
 		
 		
@@ -216,29 +244,41 @@ END_CASE
       <LineId Id="880" Count="1" />
       <LineId Id="883" Count="0" />
       <LineId Id="882" Count="0" />
-      <LineId Id="884" Count="4" />
-      <LineId Id="984" Count="1" />
-      <LineId Id="987" Count="0" />
-      <LineId Id="890" Count="0" />
-      <LineId Id="986" Count="0" />
-      <LineId Id="889" Count="0" />
-      <LineId Id="892" Count="0" />
-      <LineId Id="910" Count="0" />
-      <LineId Id="983" Count="0" />
-      <LineId Id="911" Count="2" />
-      <LineId Id="915" Count="0" />
-      <LineId Id="914" Count="0" />
-      <LineId Id="916" Count="4" />
-      <LineId Id="922" Count="0" />
-      <LineId Id="921" Count="0" />
-      <LineId Id="923" Count="1" />
-      <LineId Id="926" Count="3" />
-      <LineId Id="925" Count="0" />
-      <LineId Id="930" Count="1" />
-      <LineId Id="933" Count="3" />
-      <LineId Id="932" Count="0" />
-      <LineId Id="893" Count="0" />
-      <LineId Id="790" Count="15" />
+      <LineId Id="884" Count="0" />
+      <LineId Id="1008" Count="1" />
+      <LineId Id="1011" Count="1" />
+      <LineId Id="1014" Count="0" />
+      <LineId Id="1013" Count="0" />
+      <LineId Id="1010" Count="0" />
+      <LineId Id="1082" Count="3" />
+      <LineId Id="1140" Count="0" />
+      <LineId Id="1137" Count="0" />
+      <LineId Id="1086" Count="4" />
+      <LineId Id="1131" Count="1" />
+      <LineId Id="1134" Count="2" />
+      <LineId Id="1133" Count="0" />
+      <LineId Id="790" Count="2" />
+      <LineId Id="1142" Count="0" />
+      <LineId Id="1170" Count="0" />
+      <LineId Id="1143" Count="3" />
+      <LineId Id="793" Count="0" />
+      <LineId Id="1147" Count="1" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="1149" Count="0" />
+      <LineId Id="794" Count="1" />
+      <LineId Id="1152" Count="5" />
+      <LineId Id="1151" Count="0" />
+      <LineId Id="1158" Count="4" />
+      <LineId Id="1171" Count="1" />
+      <LineId Id="1175" Count="3" />
+      <LineId Id="1173" Count="0" />
+      <LineId Id="1179" Count="1" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="1182" Count="1" />
+      <LineId Id="1187" Count="0" />
+      <LineId Id="1184" Count="1" />
+      <LineId Id="1188" Count="2" />
+      <LineId Id="797" Count="8" />
       <LineId Id="45" Count="0" />
       <LineId Id="807" Count="7" />
       <LineId Id="806" Count="0" />

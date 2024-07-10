@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Dispenser_3" Id="{acbcce81-589c-4a3b-b5fa-b9bba968ecf1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Dispenser_3
+VAR_INPUT
+    bEnable      : BOOL;
+    bExecute     : BOOL;
+    nDispenceGram: REAL;
+END_VAR
+
+VAR_IN_OUT
+    ax : AXIS_REF;  // Achsen Referenz
+END_VAR
+
+VAR_OUTPUT
+    eStatus : State;
+    bDone   : BOOL;
+END_VAR
+
+VAR
+    fbPower        : MC_Power;
+    fbMoveDistance : MC_MoveRelative;
+    fbHalt         : MC_Halt;
+    bAxPower       : BOOL;
+    bAxMove        : BOOL;
+    bHalt          : BOOL;
+    nDistance      : REAL;
+	nVelocity 	   : REAL := 50;
+    eState_dispenser : INT := 0;
+    doneTimer      : TON;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Berechne die Bewegungsdistanz
+nDistance := (nDispenceGram * 50);
+
+// Achse updaten
+ax.ReadStatus();
+
+// Achsenfreigabe (Power) aufrufen
+fbPower(Axis := ax, Enable := bAxPower, Enable_Positive := TRUE, Enable_Negative := TRUE);
+
+// Bewegungsbefehl aufrufen
+fbMoveDistance(Axis := ax, Execute := bAxMove, Distance := nDistance, Velocity := nVelocity);
+
+// Haltbefehl aufrufen
+fbHalt(Axis := ax, Execute := bHalt);
+
+IF NOT bEnable THEN
+    eState_dispenser := 0;
+    eStatus := State.Off;
+    bAxPower := FALSE;
+    bAxMove := FALSE;
+    bHalt := TRUE;
+    bDone := FALSE;
+ELSE
+    CASE eState_dispenser OF
+        0: // Off
+            eStatus := State.Off;
+            bAxPower := FALSE;
+            bAxMove := FALSE;
+            bHalt := TRUE;
+            bDone := FALSE;
+            IF bEnable THEN
+                eState_dispenser := 1;
+            END_IF
+
+        1: // Powering up
+            eStatus := State.Init;
+            bAxPower := TRUE;
+            IF fbPower.Status THEN
+                eState_dispenser := 2;
+            END_IF
+
+        2: // Ready
+            eStatus := State.Ready;
+            bAxMove := FALSE;
+            bHalt := FALSE;
+            bDone := FALSE;
+            IF bExecute THEN
+                eState_dispenser := 3;
+            END_IF
+
+        3: // Production
+            eStatus := State.Production;
+            bAxMove := TRUE;
+            bHalt := FALSE;
+            
+            IF fbMoveDistance.Done THEN
+                bAxMove := FALSE;
+                bDone := TRUE;
+				eStatus := State.Done;
+                eState_dispenser := 4;
+            END_IF
+
+        4: // Done, waiting to reset
+			doneTimer(IN := TRUE, PT := T#2S);
+            IF doneTimer.Q THEN
+                doneTimer.IN := FALSE;
+                bDone := FALSE;
+                eState_dispenser := 2; // Zurück zu Ready
+            END_IF
+    END_CASE
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Dispenser_3">
+      <LineId Id="246" Count="53" />
+      <LineId Id="303" Count="3" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="308" Count="3" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="312" Count="5" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

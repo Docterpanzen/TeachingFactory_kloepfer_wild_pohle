@@ -79,25 +79,29 @@ CASE eState_foerderband OF
 		
 	State_Foerderband.Move_to_next:
 		eStatus := State.Production;
-		fbConveyor.bExecute := TRUE;
 		fbConveyor.bStop := FALSE;
+		fbConveyor.bExecute := TRUE;
 		CASE nCurrentPosition_1 OF
-			0: IF bSensor1 THEN
+			0: 
+			IF bSensor1 THEN
 				nCurrentPosition_2 :=0;
 				eState_foerderband := State_Foerderband.Wait;
-				END_IF
-			1: bStopper1 := TRUE;
-			   IF bSensor2 THEN
-				   nCurrentPosition_2 :=1;
+			END_IF
+			1: 
+				bStopper1 := TRUE;
+				IF bSensor2  AND NOT bSensor1 THEN
+					nCurrentPosition_2 :=1;
 					eState_foerderband := State_Foerderband.Wait;
 				END_IF
-			2: bStopper1 := FALSE;
+			2: 
+				bStopper1 := FALSE;
 				bStopper2 := TRUE;
 				IF bSensor3 THEN
 					nCurrentPosition_2 :=2;
 					eState_foerderband := State_Foerderband.Wait;
 				END_IF
-			3: bStopper2 := FALSE;
+			3: 
+				bStopper2 := FALSE;
 				bStopper3 := TRUE;
 				IF bSensor4 THEN
 					nCurrentPosition_2 :=3;
@@ -110,6 +114,9 @@ CASE eState_foerderband OF
 		IF timer.Q THEN
 			timer(IN:=FALSE);
 			eState_foerderband := State_Foerderband.Done;
+			bStopper1 := FALSE;
+			bStopper2 := FALSE;
+			bStopper3 := FALSE;
 		END_IF
 		
 	State_Foerderband.Done:
@@ -142,28 +149,7 @@ CASE eState_foerderband OF
 			eState_foerderband := State_Foerderband.Move_to_next;
 		END_IF
 		
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 END_CASE]]></ST>
     </Implementation>
@@ -182,12 +168,22 @@ END_CASE]]></ST>
       <LineId Id="96" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="100" Count="3" />
-      <LineId Id="106" Count="1" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="108" Count="21" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="107" Count="2" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="110" Count="3" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="114" Count="4" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="119" Count="5" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="125" Count="4" />
       <LineId Id="105" Count="0" />
       <LineId Id="154" Count="1" />
       <LineId Id="157" Count="3" />
+      <LineId Id="243" Count="1" />
+      <LineId Id="242" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="161" Count="1" />
       <LineId Id="164" Count="3" />
@@ -206,7 +202,8 @@ END_CASE]]></ST>
       <LineId Id="190" Count="0" />
       <LineId Id="180" Count="1" />
       <LineId Id="163" Count="0" />
-      <LineId Id="57" Count="23" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="79" Count="1" />
       <LineId Id="51" Count="0" />
     </LineIds>
   </POU>
