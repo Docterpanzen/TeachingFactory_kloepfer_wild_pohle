@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{41a6afe7-d655-4a0c-8495-2b17c7f15b36}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	// Deklaration Vereinzelung...
+	
+	
+	mcPower : MC_Power;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Aufruf der Vereinzelung
+	
+	IFC_HW.ax_BandMotor.ReadStatus();
+	
+	mcPower(
+	Axis:= IFC_HW.ax_BandMotor , 
+	Enable:= TRUE, 
+	Enable_Positive:=  TRUE, 
+	Enable_Negative:= , 
+	Override:= , 
+	BufferMode:= , 
+	Options:= , 
+	Status=> , 
+	Busy=> , 
+	Active=> , 
+	Error=> , 
+	ErrorID=> );
+	]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="25" Count="11" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
