@@ -10,6 +10,7 @@ VAR
 	fbDispenser1 : FB_Dispenser_1;
 	fbDispenser2 : FB_Dispenser_2;
 	fbDispenser3 : FB_Dispenser_3;
+	fbIot : FB_MQTT;
 
     bEnable : BOOL := FALSE;
     bExecute : BOOL := FALSE;
@@ -30,6 +31,8 @@ bExecute := IFC_HW.bExecute;
 
 // Initialisierung der Funktionsbausteine mit den globalen Variablen
 fbStatusLight(eStatus := fbVereinzelung.eStatus, bRed => bAmpelRot, bYellow => bAmpelGelb, bGreen => bAmpelGrun);
+
+fbIot();
 
 fbVereinzelung(
     bSensor_1 := bEinzelSens1, 
@@ -212,7 +215,10 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="690" Count="15" />
+      <LineId Id="690" Count="5" />
+      <LineId Id="1213" Count="0" />
+      <LineId Id="1212" Count="0" />
+      <LineId Id="696" Count="9" />
       <LineId Id="860" Count="7" />
       <LineId Id="776" Count="0" />
       <LineId Id="868" Count="0" />

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_MQTT" Id="{5d0325ac-eb40-48ce-a1cf-dc171f1da628}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MQTT
+VAR_INPUT
+	sNamen_gr : STRING;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	s_topic_prefix : STRING := 'aut/Ibk MQTTea Party/';
+	
+	fbMqttClient: FB_IotMqttClient; // MQTT client.
+    TopicToPublish : STRING(255) := 'TwinCat/Temperatures'; // Mqtt topic on which we will broadcast the acual temperatures
+    MessageToPublish : STRING(255); //String to send.
+    fbSendMessageIntervalTimer : TON := (PT:=T#10S); //Interval timer for broadcasting.
+
+    //ai_RoomTemperature AT %I* : INT; //Actual room temperature, linked to thermocouple
+    ai_RoomTemperature : INT := 1; //Actual room temperature, linked to thermocouple
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF _TaskInfo[GETCURTASKINDEXEX()].FirstCycle THEN
+    fbMqttClient.sHostName := '158.180.44.197';
+    fbMqttClient.nHostPort := 1883;
+    fbMqttClient.sTopicPrefix := s_topic_prefix;
+    fbMqttClient.sClientId := 'Publishing PLC';
+    fbMqttClient.sUserName      := 'bobm';
+    fbMqttClient.sUserPassword  := 'letmein'; 
+	
+	fbMqttClient.Execute(bConnect := TRUE);
+	
+	MessageToPublish := 'Kloepfer, Pohle, Wild';
+    fbMqttClient.Publish(sTopic:= '$$ groupnames',
+            pPayload:= ADR(MessageToPublish),
+            nPayloadSize:= LEN(MessageToPublish)+1,
+            eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+            bRetain:= FALSE,
+            bQueue:= FALSE);
+		
+	MessageToPublish := 'meter';
+			fbMqttClient.Publish(sTopic:= 'Fuellstand/$$unit',
+            pPayload:= ADR(MessageToPublish),
+            nPayloadSize:= LEN(MessageToPublish)+1,
+            eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+            bRetain:= FALSE,
+            bQueue:= FALSE);
+			
+END_IF
+
+fbMqttClient.Execute(bConnect := TRUE);
+
+IF fbMqttClient.bConnected THEN
+    fbSendMessageIntervalTimer(IN:=TRUE);
+    IF fbSendMessageIntervalTimer.Q THEN
+        fbSendMessageIntervalTimer(IN:=FALSE);
+        MessageToPublish := REAL_TO_STRING(ai_RoomTemperature / 10.0);
+
+        fbMqttClient.Publish(sTopic:= 'Fuellstand',
+            pPayload:= ADR(MessageToPublish),
+            nPayloadSize:= LEN(MessageToPublish)+1,
+            eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+            bRetain:= FALSE,
+            bQueue:= FALSE);
+			
+			
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_MQTT">
+      <LineId Id="25" Count="16" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="42" Count="16" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
