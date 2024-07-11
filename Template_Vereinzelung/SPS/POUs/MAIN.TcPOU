@@ -7,9 +7,9 @@ VAR
     fbStatusLight : FB_StatusLight;
     fbVereinzelung : FB_Vereinzelung;
     fbFoerderband : FB_Foerderband;
-	fbDispenser1 : FB_Dispenser_1;
-	fbDispenser2 : FB_Dispenser_2;
-	fbDispenser3 : FB_Dispenser_3;
+	fbDispenser1 : FB_Dispenser;
+	fbDispenser2 : FB_Dispenser;
+	fbDispenser3 : FB_Dispenser;
 	fbIot : FB_MQTT;
 
     bEnable : BOOL := FALSE;

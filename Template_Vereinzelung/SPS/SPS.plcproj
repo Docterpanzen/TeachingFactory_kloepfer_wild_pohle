@@ -48,15 +48,6 @@
     <Compile Include="POUs\FBs\FB_Dispenser.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\FB_Dispenser_1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_Dispenser_2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FBs\FB_Dispenser_3.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FBs\FB_Foerderband.TcPOU">
       <SubType>Code</SubType>
     </Compile>
