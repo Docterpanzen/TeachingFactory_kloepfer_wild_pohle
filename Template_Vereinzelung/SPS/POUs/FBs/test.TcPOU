@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="test" Id="{c294c721-8aa1-4db4-ad5d-7c9cb24ffc79}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK test
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[MessageToPublish := 'Kloepfer, Pohle, Wild';
+    fbMqttClient.Publish(sTopic:= '$$ names',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);
+			
+	MessageToPublish := 'IBK MQTTea Party';
+    fbMqttClient.Publish(sTopic:= '$$ groupname',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);
+		
+	MessageToPublish := 'meter';
+	fbMqttClient.Publish(sTopic:= 'Fuellstand/$$unit',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);]]></ST>
+    </Implementation>
+    <LineIds Name="test">
+      <LineId Id="10" Count="21" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

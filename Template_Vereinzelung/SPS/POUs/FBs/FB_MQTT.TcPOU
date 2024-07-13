@@ -30,21 +30,31 @@ END_VAR
 	
 	fbMqttClient.Execute(bConnect := TRUE);
 	
+	
+	
 	MessageToPublish := 'Kloepfer, Pohle, Wild';
-    fbMqttClient.Publish(sTopic:= '$$ groupnames',
-            pPayload:= ADR(MessageToPublish),
-            nPayloadSize:= LEN(MessageToPublish)+1,
-            eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-            bRetain:= FALSE,
-            bQueue:= FALSE);
+    fbMqttClient.Publish(sTopic:= 'names',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);
+			
+	MessageToPublish := 'IBK MQTTea Party';
+    fbMqttClient.Publish(sTopic:= '$$groupsname',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);
 		
 	MessageToPublish := 'meter';
-			fbMqttClient.Publish(sTopic:= 'Fuellstand/$$unit',
-            pPayload:= ADR(MessageToPublish),
-            nPayloadSize:= LEN(MessageToPublish)+1,
-            eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-            bRetain:= FALSE,
-            bQueue:= FALSE);
+	fbMqttClient.Publish(sTopic:= 'Fuellstand/$$unit',
+		pPayload:= ADR(MessageToPublish),
+		nPayloadSize:= LEN(MessageToPublish)+1,
+		eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= TRUE,
+		bQueue:= FALSE);
 			
 END_IF
 
@@ -60,7 +70,7 @@ IF fbMqttClient.bConnected THEN
             pPayload:= ADR(MessageToPublish),
             nPayloadSize:= LEN(MessageToPublish)+1,
             eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-            bRetain:= FALSE,
+            bRetain:= TRUE,
             bQueue:= FALSE);
 			
 			
@@ -68,10 +78,12 @@ IF fbMqttClient.bConnected THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_MQTT">
-      <LineId Id="25" Count="16" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="72" Count="5" />
-      <LineId Id="70" Count="1" />
+      <LineId Id="25" Count="9" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="111" Count="21" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="71" Count="0" />
       <LineId Id="42" Count="16" />
       <LineId Id="65" Count="1" />
       <LineId Id="9" Count="0" />
