@@ -30,6 +30,9 @@
     <Compile Include="DUTs\State_Motorsteuerung.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\State_Motor_Manipulator.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\State_Vereinzelung.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -49,6 +52,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_Foerderband.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_Manipulator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_MotorManipulator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_MQTT.TcPOU">

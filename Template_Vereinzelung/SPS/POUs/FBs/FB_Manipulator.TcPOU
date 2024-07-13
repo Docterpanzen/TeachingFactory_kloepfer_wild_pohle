@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Manipulator" Id="{6b734b31-81fe-4108-9932-6c1bf807d83b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Manipulator
+VAR_INPUT
+	bEnable : BOOL;
+	bExecute : BOOL;
+	rPosition : REAL;
+	bBottle_available : BOOL;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	
+	fbManX : FB_MotorManipulator;
+	fbManY : FB_MotorManipulator;
+	fbManZ : FB_MotorManipulator;
+	fbGripper : FB_MotorManipulator;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbManX(ax := IFC_HW.ax_ManX);
+fbManY(ax := IFC_HW.ax_ManY);
+fbManZ(ax := IFC_HW.ax_ManZ);
+fbGripper(ax := IFC_HW.ax_ManG);
+
+IF bEnable  THEN
+	fbManX.bEnable := TRUE;
+	fbManY.bEnable := TRUE;
+	fbManZ.bEnable := TRUE;
+	fbGripper.bEnable := TRUE;
+	
+	fbManX.bRefSens := TRUE;
+	fbManY.bRefSens := TRUE;
+	fbManZ.bRefSens := TRUE;
+	fbGripper.bRefSens := TRUE;
+END_IF
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Manipulator">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

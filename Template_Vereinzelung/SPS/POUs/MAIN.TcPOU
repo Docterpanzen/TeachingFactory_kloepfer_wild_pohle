@@ -10,6 +10,7 @@ VAR
 	fbDispenser1 : FB_Dispenser;
 	fbDispenser2 : FB_Dispenser;
 	fbDispenser3 : FB_Dispenser;
+	fbManipulator : FB_Manipulator;
 	fbIot : FB_MQTT;
 
     bEnable : BOOL := FALSE;
@@ -66,6 +67,8 @@ fbDispenser3(
     ax := IFC_HW.ax_Extruder3
 );
 
+fbManipulator();
+
 fbDispenser1.nDispenceGram := 5;
 fbDispenser2.nDispenceGram := 2;
 fbDispenser3.nDispenceGram := 7;
@@ -81,6 +84,7 @@ CASE nState_main OF
 		fbDispenser1.bEnable := FALSE;
 		fbDispenser2.bEnable := FALSE;
 		fbDispenser3.bEnable := FALSE;
+		fbManipulator.bEnable := FALSE;
 
         IF bEnable THEN 
             nState_main := 1;
@@ -92,6 +96,7 @@ CASE nState_main OF
 		fbDispenser1.bEnable := TRUE;
 		fbDispenser2.bEnable := TRUE;
 		fbDispenser3.bEnable := TRUE;
+		fbManipulator.bEnable := TRUE;
 
         IF fbVereinzelung.eStatus = State.Ready AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
             nState_main := nState_main + 1;
@@ -229,14 +234,18 @@ END_CASE
       <LineId Id="896" Count="0" />
       <LineId Id="901" Count="2" />
       <LineId Id="900" Count="0" />
+      <LineId Id="1238" Count="0" />
+      <LineId Id="1237" Count="0" />
       <LineId Id="907" Count="2" />
       <LineId Id="906" Count="0" />
       <LineId Id="711" Count="8" />
       <LineId Id="783" Count="0" />
       <LineId Id="946" Count="1" />
+      <LineId Id="1243" Count="0" />
       <LineId Id="720" Count="7" />
       <LineId Id="784" Count="0" />
       <LineId Id="944" Count="1" />
+      <LineId Id="1241" Count="0" />
       <LineId Id="728" Count="9" />
       <LineId Id="981" Count="0" />
       <LineId Id="739" Count="2" />
@@ -283,7 +292,8 @@ END_CASE
       <LineId Id="1182" Count="1" />
       <LineId Id="1187" Count="0" />
       <LineId Id="1184" Count="1" />
-      <LineId Id="1188" Count="2" />
+      <LineId Id="1188" Count="1" />
+      <LineId Id="1240" Count="0" />
       <LineId Id="797" Count="8" />
       <LineId Id="45" Count="0" />
       <LineId Id="807" Count="7" />
