@@ -36,7 +36,7 @@ bEnable := IFC_HW.bEnable;
 bExecute := IFC_HW.bExecute;
 
 // Initialisierung der Funktionsbausteine mit den globalen Variablen
-fbStatusLight(eStatus := fbManipulator.eStatus, bRed => bAmpelRot, bYellow => bAmpelGelb, bGreen => bAmpelGrun);
+fbStatusLight(eStatus := fbVereinzelung.eStatus, bRed => bAmpelRot, bYellow => bAmpelGelb, bGreen => bAmpelGrun);
 
 fbIot();
 
