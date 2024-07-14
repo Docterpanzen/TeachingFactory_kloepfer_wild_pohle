@@ -85,10 +85,6 @@ CASE eState_Manipulator OF
         fbPowerY(Axis := axY, Enable := bPowerOn, Enable_Positive := TRUE, Enable_Negative := TRUE);
         fbPowerZ(Axis := axZ, Enable := bPowerOn, Enable_Positive := TRUE, Enable_Negative := TRUE);
 
-        axX.ReadStatus();
-        axY.ReadStatus();
-        axZ.ReadStatus();
-
         IF fbPowerX.Status AND fbPowerY.Status AND fbPowerZ.Status THEN
             bPowerOn := FALSE;
             eState_Manipulator := 10;
@@ -143,6 +139,9 @@ CASE eState_Manipulator OF
 
     3: // Ready
         eStatus := State.Ready;
+		fbMoveX.Execute := FALSE;
+		fbMoveY.Execute := FALSE;
+		fbMoveZ.Execute := FALSE;
         IF bMoveToPosition THEN
             fbMoveX(Axis := axX, Position := nTargetPositionX, Execute := TRUE);
             fbMoveY(Axis := axY, Position := nTargetPositionY, Execute := TRUE);
@@ -179,7 +178,10 @@ END_CASE
       <LineId Id="1620" Count="18" />
       <LineId Id="1618" Count="1" />
       <LineId Id="1580" Count="0" />
-      <LineId Id="1484" Count="94" />
+      <LineId Id="1484" Count="15" />
+      <LineId Id="1504" Count="54" />
+      <LineId Id="1639" Count="2" />
+      <LineId Id="1559" Count="19" />
       <LineId Id="20" Count="0" />
       <LineId Id="1584" Count="0" />
       <LineId Id="1611" Count="0" />

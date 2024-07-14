@@ -23,6 +23,7 @@ VAR
 	timer5 : TON;
 	timer6 : TON;
 	timer7 : ton;
+	timer8 : TON;
 	
 	nTargetPosX : INT := 100; // Beispielwert
     nTargetPosY : INT := 200; // Beispielwert
@@ -110,7 +111,7 @@ CASE nState_main OF
 		fbManipulator.bEnable := TRUE;
 		fbManipulator.bHome := TRUE;
 
-        IF fbVereinzelung.eStatus = State.Ready  AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
+        IF fbVereinzelung.eStatus = State.Ready AND fbManipulator.eStatus = State.Ready AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
             nState_main := nState_main + 1;
         END_IF
 
@@ -174,9 +175,9 @@ CASE nState_main OF
 		END_IF
 		
 	9:	// warte
-		timer(in := TRUE, pt := T#2S);
-		IF timer.Q THEN
-			timer.IN := FALSE;
+		timer8(in := TRUE, pt := T#2S);
+		IF timer8.Q THEN
+			timer8.IN := FALSE;
 			nState_main := nState_main + 1;
 		END_IF
 		
@@ -235,13 +236,17 @@ CASE nState_main OF
 		
 	17: // fahre zu flasche runter
 		
-		//fbManipulator.nTargetPositionX := 29;
-		//fbManipulator.nTargetPositionY := 145.5;
-		//fbManipulator.nTargetPositionZ := 130;
-		//fbManipulator.bMoveToPosition := TRUE;
+		fbManipulator.nTargetPositionX := 10;
+		fbManipulator.nTargetPositionY := 10;
+		fbManipulator.nTargetPositionZ := 10;
+		fbManipulator.bMoveToPosition := TRUE;
 		
+		IF fbManipulator.bDone THEN
+			fbManipulator.bMoveToPosition := FALSE;
+			nState_main := nState_main + 1;
+		END_IF
 		
-		
+	18:	// Flasche greifen, zu den stationen fahren und flasche absetzen geht nicht
 		
 		
 		
@@ -277,7 +282,8 @@ END_CASE
       <LineId Id="900" Count="0" />
       <LineId Id="1238" Count="0" />
       <LineId Id="1269" Count="0" />
-      <LineId Id="1272" Count="5" />
+      <LineId Id="1272" Count="4" />
+      <LineId Id="1313" Count="0" />
       <LineId Id="1237" Count="0" />
       <LineId Id="907" Count="2" />
       <LineId Id="906" Count="0" />
@@ -358,7 +364,12 @@ END_CASE
       <LineId Id="1295" Count="0" />
       <LineId Id="1301" Count="0" />
       <LineId Id="1284" Count="0" />
-      <LineId Id="797" Count="8" />
+      <LineId Id="797" Count="0" />
+      <LineId Id="1316" Count="0" />
+      <LineId Id="1318" Count="0" />
+      <LineId Id="1317" Count="0" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="798" Count="7" />
       <LineId Id="45" Count="0" />
       <LineId Id="807" Count="7" />
       <LineId Id="806" Count="0" />
