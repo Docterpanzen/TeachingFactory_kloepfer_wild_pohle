@@ -9,9 +9,8 @@
     - [Motorsteuerung (Conveyer)](#motorsteuerung-conveyer)
     - [Förderband](#förderband)
 5. [Basisaufgabe IV Extruder](#basisaufgabe-iv-extruder)
-6. [Basisaufgabe V Manipulator-Achsen](#basisaufgabe-v-manipulator-achsen)
-7. [Basisaufgabe VI Abfüllmodul](#basisaufgabe-vi-abfüllmodul)
-8. [Basisaufgabe VII Manipulatormodul](#basisaufgabe-vii-manipulatormodul)
+6. [Basisaufgabe VI Abfüllmodul](#basisaufgabe-vi-abfüllmodul)
+7. [Basisaufgabe Manipulatormodul](#basisaufgabe-manipulatormodul)
 
 ## Einleitung
 
@@ -78,32 +77,19 @@ Der Extruder besteht aus wesentlichen Komponenten wie dem Granulatspeicher, der 
 
 Der Ablauf des Extrusionsprozesses lässt sich in verschiedene Zustände unterteilen, die im zugehörigen Ablaufdiagramm des Funktionsblocks dargestellt sind.
 
-## Basisaufgabe V Manipulator-Achsen
+## Manipulatormodul
 
-Die Manipulator-Achsen sind ein zentraler Bestandteil der Automatisierungstechnik. Jede Achse wird durch einen Motor angetrieben und überwacht, um präzise Bewegungen in verschiedene Richtungen zu ermöglichen. Der Funktionsblock zur Steuerung der Manipulator-Achsen umfasst die Initialisierung, bei der die Achsen in eine definierte Ausgangsposition gebracht werden, und die Referenzierungsfahrt, bei der die Achsen zu den Endlagensensoren fahren, um ihre Position zu bestätigen. Die Steuerung erfolgt durch spezifische Befehle, die die Richtung und Geschwindigkeit der Bewegung bestimmen, und der aktuelle Status der Achse wird über den Ausgang überwacht. Diese Struktur gewährleistet eine hohe Präzision und Zuverlässigkeit in der Handhabung und Positionierung.
+Das Manipulatormodul spielt eine zentrale Rolle in der Automatisierungstechnik und Produktionsanlage, speziell bei der präzisen Handhabung und Positionierung von Flaschen. Es besteht aus drei Achsen (X, Y, Z) und einer Greiferachse, die jeweils durch Motoren angetrieben und von Endlagensensoren überwacht werden. Der Funktionsblock zur Steuerung des Manipulatormoduls umfasst die Initialisierung, bei der die Achsen in eine definierte Ausgangsposition gebracht werden, und die Referenzierungsfahrt, bei der die Achsen zu den Endlagensensoren fahren, um ihre Position zu bestätigen.
 
-## Basisaufgabe VI Abfüllmodul
 
-Das Abfüllmodul in der Teaching Factory übernimmt die wesentliche Aufgabe der Befüllung von Flaschen. Diese Implementierung erfordert die Integration verschiedener mechanischer Komponenten und die Steuerung dieser durch entsprechende Funktionsblöcke. Im Folgenden wird der Aufbau und die Funktionsweise des Abfüllmoduls detailliert beschrieben.
+### Implementierung des Manipulatormoduls
 
-Das Abfüllmodul besteht aus mehreren Schlüsselkomponenten: Granulatspeicher, Extruderschnecke, Extrudermotor, Ultraschallsensor und elektromagnetische Hubzylinder mit Federrückstellung. Der Prozess startet, indem die Flasche über ein Förderband unter den Dispenser bewegt wird. Hierbei kommen Näherungssensoren zum Einsatz, um die exakte Position der Flasche zu ermitteln und zu gewährleisten, dass sie sich unter der Befüllstation befindet.
+Die Implementierung des Manipulatormoduls wurde durch die Programmierung eines Funktionsblocks (FB_Manipulator) realisiert, der die Achsenbewegungen, die Homing-Prozedur sowie die Bewegungsbefehle umfasst.
 
-Der Ablauf des Abfüllprozesses lässt sich in mehrere Zustände unterteilen, die im zugehörigen Ablaufdiagramm des Funktionsblocks dargestellt sind:
+### Probleme und Herausforderungen
 
-Im ausgeschalteten Zustand (State Off) sind alle Bewegungen und Aktionen gestoppt. Die Achse des Dispensers ist stromlos, keine Bewegungen werden ausgeführt, der Halt ist aktiviert und die Abfüllung ist nicht abgeschlossen. Der Übergang zu "State Powering-up" erfolgt, wenn das System aktiviert wird.
+Während der Implementierung traten Probleme bei der Bewegungssteuerung auf. Trotz der Verwendung der `MC_MoveAbsolute`-Funktion zur Positionierung des Manipulators traten immer wieder Fehler bei den angefahrenen Positionen auf. Der Manipulator bewegte sich unerwartet zu den Positionen 100, 200 und 300, anstatt zu den vorgegebenen Zielkoordinaten. Intensive Fehlersuche und Anpassungen konnten das Problem nicht vollständig beheben, und die genaue Ursache blieb unklar.
 
-In "State Powering-up" wird die Achse des Dispensers aktiviert. Sobald die Achse bereit ist, wechselt der Zustand zu "State Ready". In diesem Zustand befindet sich das System in Bereitschaft, ohne Bewegung oder Haltebefehl. Der Übergang zu "State Production" erfolgt, wenn der Startbefehl gegeben wird.
 
-Im Zustand "State Production" beginnt der Dispenser mit der Bewegung und der Halt ist deaktiviert. Dieser Zustand hält an, bis der Abfüllvorgang abgeschlossen ist, woraufhin der Zustand zu "State Done" wechselt.
 
-Nach Abschluss der Befüllung wird die Bewegung gestoppt und der Halt aktiviert. Der Done-Timer wird aktiviert, um einen kurzen Zeitraum zu warten. Nach Ablauf dieses Timers wird der Zustand wieder auf "State Ready" zurückgesetzt, um für den nächsten Befüllvorgang bereit zu sein.
 
-## Basisaufgabe VII Manipulatormodul
-
-Das Manipulatormodul in der Produktionsanlage spielt eine entscheidende Rolle bei der präzisen Handhabung und Positionierung von den Flaschen. Es besteht aus vier Achsen, die durch Endlagensensoren überwacht werden. Diese Achsen sind in einem Robotermodul zusammengefasst, das die Bewegungen des Manipulators steuert. Parallel zum Robotersubmodul werden die Waageneinheit und die Temperierungseinheit von der Graphengruppe des Moduls koordiniert, was eine gleichzeitige und synchronisierte Steuerung verschiedener Funktionseinheiten ermöglicht.
-
-Die Programmstruktur des Manipulatormoduls ist hierarchisch organisiert. Die vier Achsen des Manipulators sind in X-, Y- und Z-Koordinaten sowie Greiferaktionen spezifiziert, die an das Submodul übergeben werden. Dieses Submodul bewegt den Roboter an die gewünschten Positionen und führt die entsprechenden Greiferaktionen durch. Die Koordination dieser Bewegungen erfolgt durch ein Steuerprogramm, das die Zustandsübergänge und die entsprechenden Aktionen definiert.
-
-Der Prozess beginnt mit der Initialisierung, bei der die Achsen des Manipulators in eine definierte Ausgangsposition gebracht werden. Anschließend erfolgt die Referenzierungsfahrt, bei der die Achsen zu den Endlagensensoren fahren, um ihre Position zu bestätigen. Diese Schritte sind entscheidend, um sicherzustellen, dass die Bewegungen des Manipulators präzise und wiederholbar sind.
-
-Ein beispielhafter Ablauf des Robotermoduls zeigt, wie Positionsangaben und Greiferaktionen koordiniert werden. Zunächst werden die X-, Y- und Z-Koordinaten sowie die gewünschten Greiferaktionen an das Submodul übergeben. Das Submodul bewegt den Roboter an die spezifizierte Position und führt die Greiferaktion durch, wie z.B. das Aufnehmen oder Platzieren einer Flasche.
