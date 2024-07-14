@@ -2132,6 +2132,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2285,6 +2286,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2438,6 +2440,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2591,6 +2594,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2683,7 +2687,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{E6AE1442-486E-40F9-9923-39BAE25F5145}" Name="SPS" PrjFilePath="SPS\SPS.plcproj" TmcFilePath="SPS\SPS.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SPS\SPS.tmc" TmcHash="{BF8D9C17-8928-A6B5-560C-25DFB5E3E2F5}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SPS\SPS.tmc" TmcHash="{3491961B-5F2C-907B-800A-22FDE4D2B13E}">
 					<Name>SPS Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2830,134 +2834,6 @@ External Setpoint Generation:
 							<Name>IFC_HW.ax_ManG.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndXmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndYmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndZmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndGmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndXmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndYmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndZmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndGmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndXmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndYmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndZmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndGmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndXmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndYmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndZmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndGmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndXmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndYmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndZmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndGmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndXmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndYmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndZmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndGmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndXmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndYmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndZmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndGmin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndXmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndYmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndZmax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndGmax</Name>
-							<Type>BOOL</Type>
-						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
@@ -3072,38 +2948,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>IFC_HW.ax_ManG.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bGripperClosed</Name>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Contexts>

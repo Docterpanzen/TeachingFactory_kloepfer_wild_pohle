@@ -22,7 +22,11 @@ VAR
 	timer4 : TON;
 	timer5 : TON;
 	timer6 : TON;
+	timer7 : ton;
 	
+	nTargetPosX : INT := 100; // Beispielwert
+    nTargetPosY : INT := 200; // Beispielwert
+    nTargetPosZ : INT := 300; // Beispielwert
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -31,7 +35,7 @@ bEnable := IFC_HW.bEnable;
 bExecute := IFC_HW.bExecute;
 
 // Initialisierung der Funktionsbausteine mit den globalen Variablen
-fbStatusLight(eStatus := fbVereinzelung.eStatus, bRed => bAmpelRot, bYellow => bAmpelGelb, bGreen => bAmpelGrun);
+fbStatusLight(eStatus := fbManipulator.eStatus, bRed => bAmpelRot, bYellow => bAmpelGelb, bGreen => bAmpelGrun);
 
 fbIot();
 
@@ -67,7 +71,14 @@ fbDispenser3(
     ax := IFC_HW.ax_Extruder3
 );
 
-fbManipulator();
+fbManipulator(
+    nTargetPositionX := nTargetPosX,
+    nTargetPositionY := nTargetPosY,
+    nTargetPositionZ := nTargetPosZ,
+    axX := IFC_HW.ax_ManX,
+    axY := IFC_HW.ax_ManY,
+    axZ := IFC_HW.ax_ManZ
+);
 
 fbDispenser1.nDispenceGram := 5;
 fbDispenser2.nDispenceGram := 2;
@@ -97,8 +108,9 @@ CASE nState_main OF
 		fbDispenser2.bEnable := TRUE;
 		fbDispenser3.bEnable := TRUE;
 		fbManipulator.bEnable := TRUE;
+		fbManipulator.bHome := TRUE;
 
-        IF fbVereinzelung.eStatus = State.Ready AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
+        IF fbVereinzelung.eStatus = State.Ready  AND fbFoerderband.eStatus = State.Ready AND fbDispenser1.eStatus = State.Ready AND fbDispenser2.eStatus = State.Ready AND fbDispenser3.eStatus = State.Ready THEN
             nState_main := nState_main + 1;
         END_IF
 
@@ -198,6 +210,35 @@ CASE nState_main OF
 		END_IF
 		
 	14: // komme an pos 4 an
+		IF fbFoerderband.bEnd_Foerderband THEN
+			nState_main := nState_main + 1;
+		END_IF
+		
+	15:	//fahre auf position
+		fbManipulator.nTargetPositionX := 29;
+		fbManipulator.nTargetPositionY := 145.5;
+		fbManipulator.nTargetPositionZ := 45;
+		fbManipulator.bMoveToPosition := TRUE;
+		
+		IF fbManipulator.bDone THEN
+			nState_main := nState_main +1;
+			fbManipulator.bMoveToPosition := FALSE;
+		END_IF
+		
+		
+	16: // warte
+		timer7(in := TRUE, pt := T#2S);
+		IF timer7.Q THEN
+			timer7.IN := FALSE;
+			nState_main := nState_main +1;
+		END_IF
+		
+	17: // fahre zu flasche runter
+		
+		//fbManipulator.nTargetPositionX := 29;
+		//fbManipulator.nTargetPositionY := 145.5;
+		//fbManipulator.nTargetPositionZ := 130;
+		//fbManipulator.bMoveToPosition := TRUE;
 		
 		
 		
@@ -235,6 +276,8 @@ END_CASE
       <LineId Id="901" Count="2" />
       <LineId Id="900" Count="0" />
       <LineId Id="1238" Count="0" />
+      <LineId Id="1269" Count="0" />
+      <LineId Id="1272" Count="5" />
       <LineId Id="1237" Count="0" />
       <LineId Id="907" Count="2" />
       <LineId Id="906" Count="0" />
@@ -246,6 +289,7 @@ END_CASE
       <LineId Id="784" Count="0" />
       <LineId Id="944" Count="1" />
       <LineId Id="1241" Count="0" />
+      <LineId Id="1282" Count="0" />
       <LineId Id="728" Count="9" />
       <LineId Id="981" Count="0" />
       <LineId Id="739" Count="2" />
@@ -294,6 +338,26 @@ END_CASE
       <LineId Id="1184" Count="1" />
       <LineId Id="1188" Count="1" />
       <LineId Id="1240" Count="0" />
+      <LineId Id="1267" Count="0" />
+      <LineId Id="1281" Count="0" />
+      <LineId Id="1285" Count="1" />
+      <LineId Id="1288" Count="1" />
+      <LineId Id="1296" Count="0" />
+      <LineId Id="1287" Count="0" />
+      <LineId Id="1290" Count="2" />
+      <LineId Id="1299" Count="0" />
+      <LineId Id="1293" Count="0" />
+      <LineId Id="1302" Count="3" />
+      <LineId Id="1307" Count="1" />
+      <LineId Id="1310" Count="0" />
+      <LineId Id="1309" Count="0" />
+      <LineId Id="1283" Count="0" />
+      <LineId Id="1294" Count="0" />
+      <LineId Id="1300" Count="0" />
+      <LineId Id="1297" Count="1" />
+      <LineId Id="1295" Count="0" />
+      <LineId Id="1301" Count="0" />
+      <LineId Id="1284" Count="0" />
       <LineId Id="797" Count="8" />
       <LineId Id="45" Count="0" />
       <LineId Id="807" Count="7" />

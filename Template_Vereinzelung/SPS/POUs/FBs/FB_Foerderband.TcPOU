@@ -14,7 +14,9 @@ VAR_INPUT
 	
 END_VAR
 VAR_OUTPUT
-	
+
+	bEnd_Foerderband : BOOL := FALSE;	
+
 	eStatus : State := State.Off;
 	
 	bStopper1: BOOL;
@@ -104,6 +106,7 @@ CASE eState_foerderband OF
 				bStopper2 := FALSE;
 				bStopper3 := TRUE;
 				IF bSensor4 THEN
+					bEnd_Foerderband := TRUE;
 					nCurrentPosition_2 :=3;
 					eState_foerderband := State_Foerderband.Wait;
 				END_IF
@@ -139,6 +142,7 @@ CASE eState_foerderband OF
 				fbConveyor.bExecute := FALSE;
 				fbConveyor.bStop := TRUE;
 				nCurrentPosition_1 :=0;
+				bEnd_Foerderband := FALSE;
 		END_CASE
 		
 		eState_foerderband := State_Foerderband.wait_for_next;
@@ -178,7 +182,9 @@ END_CASE]]></ST>
       <LineId Id="238" Count="0" />
       <LineId Id="119" Count="5" />
       <LineId Id="237" Count="0" />
-      <LineId Id="125" Count="4" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="127" Count="2" />
       <LineId Id="105" Count="0" />
       <LineId Id="154" Count="1" />
       <LineId Id="157" Count="3" />
@@ -194,7 +200,9 @@ END_CASE]]></ST>
       <LineId Id="185" Count="0" />
       <LineId Id="174" Count="3" />
       <LineId Id="186" Count="0" />
-      <LineId Id="178" Count="1" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="179" Count="0" />
       <LineId Id="192" Count="0" />
       <LineId Id="194" Count="0" />
       <LineId Id="193" Count="0" />

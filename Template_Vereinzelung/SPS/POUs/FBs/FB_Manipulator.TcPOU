@@ -2,41 +2,170 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_Manipulator" Id="{6b734b31-81fe-4108-9932-6c1bf807d83b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Manipulator
+
 VAR_INPUT
-	bEnable : BOOL;
-	bExecute : BOOL;
-	rPosition : REAL;
-	bBottle_available : BOOL;
-	
+    bEnable : BOOL;
+    bMoveToPosition : BOOL;
+    bHome : BOOL; 
+    nTargetPositionX : REAL;
+    nTargetPositionY : REAL;
+    nTargetPositionZ : REAL;
 END_VAR
+
 VAR_OUTPUT
+    eStatus : State;
+    bDone : BOOL;
+    bHomed : BOOL; 
 END_VAR
+
+VAR_IN_OUT
+    axX : AXIS_REF;
+    axY : AXIS_REF;
+    axZ : AXIS_REF;
+END_VAR
+
 VAR
-	
-	fbManX : FB_MotorManipulator;
-	fbManY : FB_MotorManipulator;
-	fbManZ : FB_MotorManipulator;
-	fbGripper : FB_MotorManipulator;
-
-END_VAR
-]]></Declaration>
+    fbPowerX : MC_Power;
+    fbPowerY : MC_Power;
+    fbPowerZ : MC_Power;
+    fbMoveX : MC_MoveAbsolute;
+    fbMoveY : MC_MoveAbsolute;
+    fbMoveZ : MC_MoveAbsolute;
+    fbHomeX : MC_Home;
+    fbHomeY : MC_Home;
+    fbHomeZ : MC_Home;
+    mcResetX : MC_Reset;
+    mcResetY : MC_Reset;
+    mcResetZ : MC_Reset;
+    bPowerOn : BOOL;
+    eState_Manipulator : INT := 0;
+    eState_Homing : INT := 0;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbManX(ax := IFC_HW.ax_ManX);
-fbManY(ax := IFC_HW.ax_ManY);
-fbManZ(ax := IFC_HW.ax_ManZ);
-fbGripper(ax := IFC_HW.ax_ManG);
+      <ST><![CDATA[axX.ReadStatus();
+axY.ReadStatus();
+axZ.ReadStatus();
 
-IF bEnable  THEN
-	fbManX.bEnable := TRUE;
-	fbManY.bEnable := TRUE;
-	fbManZ.bEnable := TRUE;
-	fbGripper.bEnable := TRUE;
+fbMoveX(
+	Axis := axX, 
+	Velocity := 40.0,
+	Acceleration := 5.0,
+	Deceleration := 5.0,	
+	);
 	
-	fbManX.bRefSens := TRUE;
-	fbManY.bRefSens := TRUE;
-	fbManZ.bRefSens := TRUE;
-	fbGripper.bRefSens := TRUE;
-END_IF
+fbMoveY(
+	Axis := axY, 
+	Velocity := 40.0,
+	Acceleration := 5.0,
+	Deceleration := 5.0,	
+	);
+	
+fbMoveZ(
+	Axis := axZ, 
+	Velocity := 40.0,
+	Acceleration := 5.0,
+	Deceleration := 5.0,	
+	);
+
+
+CASE eState_Manipulator OF
+    0: // Off
+        eStatus := State.Off;
+        bPowerOn := FALSE;
+        bDone := FALSE;
+        bHomed := FALSE;
+
+        IF bEnable THEN
+            eState_Manipulator := 1;
+        END_IF
+
+    1: // Powering up
+        bPowerOn := TRUE;
+        fbPowerX(Axis := axX, Enable := bPowerOn, Enable_Positive := TRUE, Enable_Negative := TRUE);
+        fbPowerY(Axis := axY, Enable := bPowerOn, Enable_Positive := TRUE, Enable_Negative := TRUE);
+        fbPowerZ(Axis := axZ, Enable := bPowerOn, Enable_Positive := TRUE, Enable_Negative := TRUE);
+
+        axX.ReadStatus();
+        axY.ReadStatus();
+        axZ.ReadStatus();
+
+        IF fbPowerX.Status AND fbPowerY.Status AND fbPowerZ.Status THEN
+            bPowerOn := FALSE;
+            eState_Manipulator := 10;
+        END_IF
+
+    10: // Reset Axes X, Y, Z
+        mcResetX(Axis := axX, Execute := TRUE);
+        mcResetY(Axis := axY, Execute := TRUE);
+        mcResetZ(Axis := axZ, Execute := TRUE);
+
+        IF mcResetX.Done AND mcResetY.Done AND mcResetZ.Done THEN
+            mcResetX.Execute := FALSE;
+            mcResetY.Execute := FALSE;
+            mcResetZ.Execute := FALSE;
+            eState_Manipulator := 20;
+        END_IF
+
+    20: // Re-enable Axes X, Y, Z
+        fbPowerX(Axis := axX, Enable := TRUE, Enable_Positive := TRUE, Enable_Negative := TRUE);
+        fbPowerY(Axis := axY, Enable := TRUE, Enable_Positive := TRUE, Enable_Negative := TRUE);
+        fbPowerZ(Axis := axZ, Enable := TRUE, Enable_Positive := TRUE, Enable_Negative := TRUE);
+
+        IF fbPowerX.Status AND fbPowerY.Status AND fbPowerZ.Status THEN
+            eState_Manipulator := 40;
+        END_IF
+
+    40: // Homing
+        eStatus := State.Init;
+        CASE eState_Homing OF
+            0: // H0me X
+                fbHomeX(Axis := axX, Execute := TRUE, HomingMode := MC_DefaultHoming, Position := 29, bCalibrationCam := bManEndXmin);
+                IF fbHomeX.Done THEN
+                    fbHomeX.Execute := FALSE;
+                    eState_Homing := 1;
+                END_IF
+
+            1: // H0me Y
+                fbHomeY(Axis := axY, Execute := TRUE, HomingMode := MC_DefaultHoming, Position := 145.5, bCalibrationCam := bManEndYmin);
+                IF fbHomeY.Done THEN
+                    fbHomeY.Execute := FALSE;
+                    eState_Homing := 2;
+                END_IF
+
+            2: // Home Z
+                fbHomeZ(Axis := axZ, Execute := TRUE, HomingMode := MC_DefaultHoming, Position := 45, bCalibrationCam := bManEndZmin);
+                IF fbHomeZ.Done THEN
+                    fbHomeZ.Execute := FALSE;
+                    bHomed := TRUE;
+                    eState_Manipulator := 3;
+                END_IF
+        END_CASE
+
+    3: // Ready
+        eStatus := State.Ready;
+        IF bMoveToPosition THEN
+            fbMoveX(Axis := axX, Position := nTargetPositionX, Execute := TRUE);
+            fbMoveY(Axis := axY, Position := nTargetPositionY, Execute := TRUE);
+            fbMoveZ(Axis := axZ, Position := nTargetPositionZ, Execute := TRUE);
+            eState_Manipulator := 4;
+        END_IF
+
+    4: // Moving to position
+        eStatus := State.Production;
+        IF fbMoveX.Done AND fbMoveY.Done AND fbMoveZ.Done THEN
+            eState_Manipulator := 5;
+        END_IF
+
+    5: // Done
+        eStatus := State.Done;
+        bDone := TRUE;
+        IF NOT bMoveToPosition THEN
+            eState_Manipulator := 3;
+        END_IF
+
+END_CASE
+
+
 
 
 
@@ -44,20 +173,18 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_Manipulator">
-      <LineId Id="9" Count="0" />
-      <LineId Id="17" Count="2" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="2" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="2" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="21" Count="1" />
+      <LineId Id="1579" Count="0" />
+      <LineId Id="1581" Count="1" />
+      <LineId Id="1617" Count="0" />
+      <LineId Id="1620" Count="18" />
+      <LineId Id="1618" Count="1" />
+      <LineId Id="1580" Count="0" />
+      <LineId Id="1484" Count="94" />
       <LineId Id="20" Count="0" />
+      <LineId Id="1584" Count="0" />
+      <LineId Id="1611" Count="0" />
+      <LineId Id="1589" Count="3" />
+      <LineId Id="1587" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

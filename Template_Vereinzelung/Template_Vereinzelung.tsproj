@@ -2132,6 +2132,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2285,6 +2286,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2438,6 +2440,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2591,6 +2594,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2683,7 +2687,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{E6AE1442-486E-40F9-9923-39BAE25F5145}" Name="SPS" PrjFilePath="SPS\SPS.plcproj" TmcFilePath="SPS\SPS.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SPS\SPS.tmc" TmcHash="{28915611-0AAC-8E0A-ACCF-8304C685D375}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SPS\SPS.tmc" TmcHash="{B405ABF1-B759-6F61-8FDA-AC2F25AD09F8}">
 					<Name>SPS Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2746,6 +2750,10 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
+							<Name>IFC_HW.ax_BandMotor.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>IFC_HW.iFillSens1</Name>
 							<Comment><![CDATA[ Füllstandssensor im Granulatspeicher 1]]></Comment>
 							<Type>UINT</Type>
@@ -2759,10 +2767,6 @@ External Setpoint Generation:
 							<Name>IFC_HW.iFillSens3</Name>
 							<Comment><![CDATA[ Füllstandssensor im Granulatspeicher 3]]></Comment>
 							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>IFC_HW.ax_BandMotor.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>IFC_HW.bManEndXmin</Name>
@@ -2829,38 +2833,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>IFC_HW.ax_ManG.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndMin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManEndMax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndMin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManEndMax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndMin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManEndMax</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndMin</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManEndMax</Name>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -2976,38 +2948,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>IFC_HW.ax_ManG.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManX.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManY.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbManZ.bGripperClosed</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bManBreakZ</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbManipulator.fbGripper.bGripperClosed</Name>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Contexts>
