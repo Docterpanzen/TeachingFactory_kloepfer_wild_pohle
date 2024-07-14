@@ -9,8 +9,7 @@
     - [Motorsteuerung (Conveyer)](#motorsteuerung-conveyer)
     - [Förderband](#förderband)
 5. [Basisaufgabe IV Extruder](#basisaufgabe-iv-extruder)
-6. [Basisaufgabe VI Abfüllmodul](#basisaufgabe-vi-abfüllmodul)
-7. [Basisaufgabe Manipulatormodul](#basisaufgabe-manipulatormodul)
+6. [Basisaufgabe Manipulatormodul](#basisaufgabe-manipulatormodul)
 
 ## Einleitung
 
@@ -77,7 +76,7 @@ Der Extruder besteht aus wesentlichen Komponenten wie dem Granulatspeicher, der 
 
 Der Ablauf des Extrusionsprozesses lässt sich in verschiedene Zustände unterteilen, die im zugehörigen Ablaufdiagramm des Funktionsblocks dargestellt sind.
 
-## Manipulatormodul
+## Basisaufgabe Manipulatormodul
 
 Das Manipulatormodul spielt eine zentrale Rolle in der Automatisierungstechnik und Produktionsanlage, speziell bei der präzisen Handhabung und Positionierung von Flaschen. Es besteht aus drei Achsen (X, Y, Z) und einer Greiferachse, die jeweils durch Motoren angetrieben und von Endlagensensoren überwacht werden. Der Funktionsblock zur Steuerung des Manipulatormoduls umfasst die Initialisierung, bei der die Achsen in eine definierte Ausgangsposition gebracht werden, und die Referenzierungsfahrt, bei der die Achsen zu den Endlagensensoren fahren, um ihre Position zu bestätigen.
 
